@@ -1,0 +1,4 @@
+out/build/x64-debug
+.vs/
+*.vcxproj.user
+*.suo
