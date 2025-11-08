@@ -15,15 +15,15 @@ namespace Tests_Utility
 			return singletonInstance;
 		}
 
-		inline const [[nodiscard]] EntityID getUnusedEntityIdentifier() noexcept
+		inline const [[nodiscard]] ECS_System::EntityID getUnusedEntityIdentifier() noexcept
 		{
 			return ++NEXT_ARBITRARY_ENTITY_IDENTIFIER;
 		}
 
 	private:
 
-		EntityID NEXT_ARBITRARY_ENTITY_IDENTIFIER{ 0 };
-		const EntityActiveStatus DEFAULT_ENTITY_ACTIVE_STATUS{ EntityActiveStatus::EntityDisabled };
+		ECS_System::EntityID NEXT_ARBITRARY_ENTITY_IDENTIFIER{ 0 };
+		const ECS_System::EntityActiveStatus DEFAULT_ENTITY_ACTIVE_STATUS{ ECS_System::EntityActiveStatus::EntityDisabled };
 
 		ECS_Tests_Utility() = default;
 		~ECS_Tests_Utility() = default;
