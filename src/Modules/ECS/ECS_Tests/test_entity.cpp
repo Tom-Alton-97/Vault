@@ -7,7 +7,7 @@
 
 TEST_CASE("Entity-Test-001 : Create an Entity with arbitrary ID and check that it has been assigned correctly.")
 {
-	GIVEN("An entity has been created with an arbitrary ID.")
+	GIVEN("An Entity has been created with an arbitrary ID.")
 	{
 		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
 		Entity testEntity(testEntityID);
@@ -21,7 +21,7 @@ TEST_CASE("Entity-Test-001 : Create an Entity with arbitrary ID and check that i
 
 TEST_CASE("Entity-Test-002 : Create an Entity with an ID and check that the EntityActiveStatus is defaulted correctly")
 {
-	GIVEN("An entity has been created")
+	GIVEN("An Entity has been created with an arbitrary ID.")
 	{
 		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
 		Entity testEntity(testEntityID);
