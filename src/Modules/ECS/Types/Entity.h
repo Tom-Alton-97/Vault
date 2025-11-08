@@ -14,8 +14,8 @@ class Entity : public IEntity
 public:
 	explicit Entity(const EntityID argGeneratedEntityIdentifier) noexcept : IEntity(argGeneratedEntityIdentifier) {}
 
-	[[nodiscard]]
-	const EntityActiveStatus getEntityStatus() const noexcept;
+	
+	const [[nodiscard]] EntityActiveStatus getEntityStatus() const noexcept;
 	void setEntityStatusEnabled() noexcept;
 	void setEntityStatusDisabled() noexcept;
 
