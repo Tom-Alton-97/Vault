@@ -9,8 +9,8 @@ TEST_CASE("Entity-Test-001 : Create an Entity with arbitrary ID and check that i
 {
 	GIVEN("An Entity has been created with an arbitrary ID.")
 	{
-		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
-		Entity testEntity(testEntityID);
+		ECS_System::EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
+		ECS_System::Entity testEntity(testEntityID);
 
 		THEN("Check that the entity identifier was set correctly.")
 		{
@@ -23,12 +23,12 @@ TEST_CASE("Entity-Test-002 : Create an Entity with an ID and check that the Enti
 {
 	GIVEN("An Entity has been created with an arbitrary ID.")
 	{
-		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
-		Entity testEntity(testEntityID);
+		ECS_System::EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
+		ECS_System::Entity testEntity(testEntityID);
 
 		THEN("Check that the EntityActiveStatus is defaulted to Disabled")
 		{
-			REQUIRE(testEntity.getEntityStatus() == EntityActiveStatus::EntityEnabled);
+			REQUIRE(testEntity.getEntityStatus() == ECS_System::EntityActiveStatus::EntityEnabled);
 		}
 	}
 }
@@ -37,8 +37,8 @@ TEST_CASE("Entity-Test-003 : Create an Entity with an ID and check that we can s
 {
 	GIVEN("An Entity has been created")
 	{
-		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
-		Entity testEntity(testEntityID);
+		ECS_System::EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
+		ECS_System::Entity testEntity(testEntityID);
 
 		WHEN("Set the Entities EntityActiveStatus to EntityDisabled")
 		{
@@ -46,7 +46,7 @@ TEST_CASE("Entity-Test-003 : Create an Entity with an ID and check that we can s
 
 			THEN("Check that the Entities EntityActiveStatus is set to EntityDisabled")
 			{
-				REQUIRE(testEntity.getEntityStatus() == EntityActiveStatus::EntityDisabled);
+				REQUIRE(testEntity.getEntityStatus() == ECS_System::EntityActiveStatus::EntityDisabled);
 			}
 		}
 	}
@@ -56,20 +56,20 @@ TEST_CASE("Entity-Test-004 : Create an Entity with an ID and check that we can s
 {
 	GIVEN("An Entity has been created")
 	{
-		EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
-		Entity testEntity(testEntityID);
+		ECS_System::EntityID testEntityID{ Tests_Utility::ECS_Tests_Utility::getInstance().getUnusedEntityIdentifier() };
+		ECS_System::Entity testEntity(testEntityID);
 
 		WHEN("Set the Entities EntityActiveStatus to EntityDisabled")
 		{
 			testEntity.setEntityStatusDisabled();
 
-			REQUIRE(testEntity.getEntityStatus() == EntityActiveStatus::EntityDisabled);
+			REQUIRE(testEntity.getEntityStatus() == ECS_System::EntityActiveStatus::EntityDisabled);
 
 			THEN("Set the EntitiesActiveStatus to EntityEnabled")
 			{
 				testEntity.setEntityStatusEnabled();
 
-				REQUIRE(testEntity.getEntityStatus() == EntityActiveStatus::EntityEnabled);
+				REQUIRE(testEntity.getEntityStatus() == ECS_System::EntityActiveStatus::EntityEnabled);
 			}
 		}
 	}

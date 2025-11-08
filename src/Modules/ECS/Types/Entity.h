@@ -3,28 +3,31 @@
 #include <atomic>
 #include "IEntity.h"
 
-enum class EntityActiveStatus : std::uint_fast8_t
+namespace ECS_System
 {
-	EntityEnabled = 1 << 0,
-	EntityDisabled = 1 << 1
-};
+	enum class EntityActiveStatus : std::uint_fast8_t
+	{
+		EntityEnabled = 1 << 0,
+		EntityDisabled = 1 << 1
+	};
 
-class Entity : public IEntity
-{
-public:
-	explicit Entity(const EntityID argGeneratedEntityIdentifier) noexcept : IEntity(argGeneratedEntityIdentifier) {}
+	class Entity : public IEntity
+	{
+	public:
+		explicit Entity(const EntityID argGeneratedEntityIdentifier) noexcept : IEntity(argGeneratedEntityIdentifier) {}
 
-	
-	const [[nodiscard]] EntityActiveStatus getEntityStatus() const noexcept;
-	void setEntityStatusEnabled() noexcept;
-	void setEntityStatusDisabled() noexcept;
 
-protected:
-	Entity(const Entity& argOther) = delete;
-	Entity(Entity&& argOther) = delete;
-	Entity& operator=(const Entity& argOther) = delete;
-	Entity& operator=(const Entity&& argOther) = delete;
+		const [[nodiscard]] EntityActiveStatus getEntityStatus() const noexcept;
+		void setEntityStatusEnabled() noexcept;
+		void setEntityStatusDisabled() noexcept;
 
-private:
-	volatile std::atomic<EntityActiveStatus> entityStatus{ EntityActiveStatus::EntityEnabled };
-};
+	protected:
+		Entity(const Entity& argOther) = delete;
+		Entity(Entity&& argOther) = delete;
+		Entity& operator=(const Entity& argOther) = delete;
+		Entity& operator=(const Entity&& argOther) = delete;
+
+	private:
+		volatile std::atomic<EntityActiveStatus> entityStatus{ EntityActiveStatus::EntityEnabled };
+	};
+}

@@ -1,6 +1,9 @@
 #include "IEntity.h"
 
-const EntityID IEntity::getEntityID() const noexcept
+namespace ECS_System
 {
-	return this->entityIdentifier;
+	const EntityID IEntity::getEntityID() const noexcept
+	{
+		return this->entityIdentifier;
+	}
 }
