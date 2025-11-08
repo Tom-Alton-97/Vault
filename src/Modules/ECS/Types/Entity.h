@@ -1,13 +1,11 @@
 #pragma once
 
 #include <atomic>
-
 #include "IEntity.h"
-#include "EntityActiveStatus.h"
 
 enum class EntityActiveStatus : std::uint_fast8_t
 {
-	EntityActive = 1 << 0,
+	EntityEnabled = 1 << 0,
 	EntityDisabled = 1 << 1
 };
 
@@ -18,7 +16,7 @@ public:
 
 	[[nodiscard]]
 	const EntityActiveStatus getEntityStatus() const noexcept;
-	void setEntityStatusActive() noexcept;
+	void setEntityStatusEnabled() noexcept;
 	void setEntityStatusDisabled() noexcept;
 
 protected:
@@ -28,5 +26,5 @@ protected:
 	Entity& operator=(const Entity&& argOther) = delete;
 
 private:
-	volatile std::atomic<EntityActiveStatus> entityStatus{ EntityActiveStatus::EntityDisabled };
+	volatile std::atomic<EntityActiveStatus> entityStatus{ EntityActiveStatus::EntityEnabled };
 };
