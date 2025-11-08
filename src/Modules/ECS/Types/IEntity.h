@@ -10,8 +10,8 @@ public:
 	explicit IEntity(const EntityID argGeneratedEntityIdentifier) noexcept : entityIdentifier(argGeneratedEntityIdentifier) {}
 	virtual ~IEntity() = default;
 
-	[[nodiscard]]
-	const EntityID getEntityID() const noexcept;
+	
+	const [[nodiscard]] EntityID getEntityID() const noexcept;
 
 protected:
 	IEntity(const IEntity& argOther) = delete;

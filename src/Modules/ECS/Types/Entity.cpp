@@ -2,12 +2,12 @@
 
 const EntityActiveStatus Entity::getEntityStatus() const noexcept
 {
-	return this->entityStatus;
+	return this->entityStatus.load();
 }
 
-void Entity::setEntityStatusActive() noexcept
+void Entity::setEntityStatusEnabled() noexcept
 {
-	this->entityStatus.store(EntityActiveStatus::EntityActive);
+	this->entityStatus.store(EntityActiveStatus::EntityEnabled);
 }
 
 void Entity::setEntityStatusDisabled() noexcept
