@@ -3,6 +3,7 @@
 #include <atomic>
 
 #include "IEntity.h"
+#include "EntityActiveStatus.h"
 
 enum class EntityActiveStatus : std::uint_fast8_t
 {
