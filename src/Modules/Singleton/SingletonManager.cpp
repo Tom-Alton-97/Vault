@@ -1,10 +1,12 @@
+#include <ranges>
+
 #include "SingletonManager.h"
 
 void SingletonManager::DestroyAll() noexcept
 {
-	for (const auto it = destructors.rbegin(); it != destructor.rend(); ++it)
+	for (const auto& localDestructor : std::views::reverse(destructors))
 	{
-		(*it)();
+		localDestructor();
 	}
 
 	destructors.clear();
@@ -15,7 +17,7 @@ void SingletonManager::RegisterSingletonDestructor(std::function<void()> argDest
 	destructors.push_back(std::move(argDestructor));
 }
 
-void SingletonManager::destructor() noexcept
+SingletonManager::~SingletonManager()
 {
 	DestroyAll();
 }

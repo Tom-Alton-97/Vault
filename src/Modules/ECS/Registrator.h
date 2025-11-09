@@ -13,7 +13,6 @@ namespace ECS_System
 			return instance;
 		}
 
-
 		void createEntity() {};
 		void createComponent() {};
 		void createSystem() {};

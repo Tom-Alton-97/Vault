@@ -11,6 +11,6 @@ public:
 
 protected:
 
-	virtual void destructor() noexcept = 0
+	virtual void destructor() noexcept = 0;
 private:
 };

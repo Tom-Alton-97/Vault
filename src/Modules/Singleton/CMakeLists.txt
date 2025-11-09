@@ -6,7 +6,3 @@ file(GLOB_RECURSE MODULE_SOURCES CMAKE_CONFIGURE_DEPENDS
 
 add_library(Singleton STATIC ${MODULE_SOURCES})
 target_include_directories(Singleton PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-
-if(BUILD_TESTS)
-	add_subdirectory(ECS_Tests)
-endif()
