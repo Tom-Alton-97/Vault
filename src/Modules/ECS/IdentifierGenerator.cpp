@@ -1,6 +1,8 @@
 #include "IdentifierGenerator.h"
 
 #include <stdexcept>
+#include <iostream>
+#include <limits>
 
 namespace ECS_System
 {
@@ -13,22 +15,39 @@ namespace ECS_System
 		return localIdentifier;
 	}
 
-	inline void ECS_System::IdentifierGenerator::reclaimIdentifier(const IdentifierType argIdentifierType, const IdentifierUnderlyingType argIdentifier) noexcept
+	const bool ECS_System::IdentifierGenerator::reclaimIdentifier(const IdentifierType argIdentifierType, const IdentifierUnderlyingType argIdentifier) noexcept
 	{
-		auto localReclaimedIdentifierIterator = getInferredReclaimedContainer(argIdentifierType).find(argIdentifier);
+		bool returnVal{ false };
 
-		getInferredReclaimedContainer(argIdentifierType).erase(localReclaimedIdentifierIterator);
+		auto& inferredContainer{ getInferredContainer(argIdentifierType) };
+		auto localReclaimedIdentifierIterator{ inferredContainer.find(argIdentifier) };
+
+		if (inferredContainer.end() != localReclaimedIdentifierIterator)
+		{
+			getInferredReclaimedContainer(argIdentifierType).insert(*localReclaimedIdentifierIterator);
+			inferredContainer.erase(localReclaimedIdentifierIterator);
+
+			returnVal = true;
+		} 
+		else
+		{
+			// TODO log here
+			std::cerr << "Tried to reclaim an invalid identifier." << std::endl << std::flush;
+		}
+
+		return returnVal;
 	}
 
-	IdentifierUnderlyingType const IdentifierGenerator::internalGenerateIdentifier(IdentifierType const argIdentifierType)
+	IdentifierUnderlyingType const IdentifierGenerator::internalGenerateIdentifier(IdentifierType const argIdentifierType) noexcept
 	{
 		IdentifierUnderlyingType localNextIdentifier = getNextInferredTypeIdentifier(argIdentifierType);
 
-		if (hasValidTypeIdentifierAvailable(argIdentifierType, localNextIdentifier))
+		if (true == hasValidTypeIdentifierAvailable(argIdentifierType, localNextIdentifier))
 		{
-			throw std::out_of_range("Next Identifier is out of range.");
+			// TODO log message here
+			std::cerr << "No valid type identifer available." << std::endl << std::flush;
 		}
-
+		
 		return localNextIdentifier;
 	}
 

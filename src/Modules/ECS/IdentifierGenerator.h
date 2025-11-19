@@ -26,7 +26,7 @@ namespace ECS_System
 		}
 
 		IdentifierUnderlyingType [[nodiscard]] generateIdentifier(IdentifierType const argIdentifierType) noexcept;
-		void reclaimIdentifier(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argIdentifier) noexcept;
+		const bool reclaimIdentifier(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argIdentifier) noexcept;
 
 	protected:
 	private:
@@ -37,7 +37,7 @@ namespace ECS_System
 		std::set<IdentifierUnderlyingType> [[nodiscard]] & getInferredReclaimedContainer(IdentifierType const argIdentifierType);
 		IdentifierUnderlyingType [[nodiscard]] & getNextInferredTypeIdentifier(IdentifierType const argIdentifierType);
 
-		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier(IdentifierType const argIdentifierType);
+		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier(IdentifierType const argIdentifierType) noexcept;
 		bool [[nodiscard]] const hasValidTypeIdentifierAvailable(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argNextIdentifier) noexcept;
 
 		IdentifierUnderlyingType nextEntityTypeIdentifier{ 0 };
