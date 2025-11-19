@@ -28,6 +28,8 @@ namespace ECS_System
 		IdentifierUnderlyingType [[nodiscard]] generateIdentifier(IdentifierType const argIdentifierType) noexcept;
 		const bool reclaimIdentifier(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argIdentifier) noexcept;
 
+		void Reset() noexcept;
+
 	protected:
 	private:
 

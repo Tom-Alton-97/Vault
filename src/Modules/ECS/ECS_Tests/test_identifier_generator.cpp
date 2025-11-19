@@ -11,6 +11,8 @@ TEST_CASE("Identifier-Generator-Test-001 : IdentifierGenerator is able to genera
 {
 	GIVEN("Two identifiers have been generated.")
 	{
+		ECS_System::IdentifierGenerator::getInstance()->Reset();
+
 		ECS_System::IdentifierType localIdentifierType{ ECS_System::IdentifierType::EntityType };
 
 		ECS_System::IdentifierUnderlyingType localIdentifier_1{ ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) };
@@ -28,6 +30,8 @@ TEST_CASE("Identifier-Generator-Test-002 : Identifier is able to generate an Ide
 {
 	GIVEN("An Identifier has been generated.")
 	{
+		ECS_System::IdentifierGenerator::getInstance()->Reset();
+
 		ECS_System::IdentifierType localIdentifierType{ ECS_System::IdentifierType::EntityType };
 
 		ECS_System::IdentifierUnderlyingType localIdentifier_1{ ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) };

@@ -6,7 +6,20 @@
 
 namespace ECS_System
 {
-	IdentifierUnderlyingType ECS_System::IdentifierGenerator::generateIdentifier(const IdentifierType argIdentifierType) noexcept
+	void IdentifierGenerator::Reset() noexcept
+	{
+		nextEntityTypeIdentifier = 0;
+		nextComponentTypeIdentifier = 0;
+		nextSystemTypeIdentifier = 0;
+		entityTypeIdentifiers.clear();
+		componentTypeIdentifiers.clear();
+		systemTypeIdentifiers.clear();
+		reclaimedEntityTypeIdentifiers.clear();
+		reclaimedComponentTypeIdentifiers.clear();
+		reclaimedSystemTypeIdentifiers.clear();
+	}
+
+	IdentifierUnderlyingType IdentifierGenerator::generateIdentifier(const IdentifierType argIdentifierType) noexcept
 	{
 		IdentifierUnderlyingType localIdentifier{ internalGenerateIdentifier(argIdentifierType) };
 
@@ -15,7 +28,7 @@ namespace ECS_System
 		return localIdentifier;
 	}
 
-	const bool ECS_System::IdentifierGenerator::reclaimIdentifier(const IdentifierType argIdentifierType, const IdentifierUnderlyingType argIdentifier) noexcept
+	const bool IdentifierGenerator::reclaimIdentifier(const IdentifierType argIdentifierType, const IdentifierUnderlyingType argIdentifier) noexcept
 	{
 		bool returnVal{ false };
 
@@ -63,7 +76,7 @@ namespace ECS_System
 		return !getInferredReclaimedContainer(argIdentifierType).empty();
 	}
 
-	std::set<IdentifierUnderlyingType>& ECS_System::IdentifierGenerator::getInferredContainer(const IdentifierType argIdentifierType)
+	std::set<IdentifierUnderlyingType>& IdentifierGenerator::getInferredContainer(const IdentifierType argIdentifierType)
 	{
 		switch (argIdentifierType)
 		{
@@ -109,7 +122,7 @@ namespace ECS_System
 
 		throw std::invalid_argument("Identifier type was invalid.");
 	}
-	IdentifierUnderlyingType&  ECS_System::IdentifierGenerator::getNextInferredTypeIdentifier(IdentifierType const argIdentifierType)
+	IdentifierUnderlyingType&  IdentifierGenerator::getNextInferredTypeIdentifier(IdentifierType const argIdentifierType)
 	{
 		switch (argIdentifierType)
 		{
