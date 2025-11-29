@@ -2,8 +2,9 @@
 
 #include <vector>
 #include <functional>
+#include <memory>
 
-#include "Singleton.h"
+#include "SingletonBase.h"
 
 class SingletonManager
 {
@@ -16,7 +17,12 @@ public:
 		return instance;
 	}
 
+	void RegisterSingleton(std::unique_ptr<SingletonBase> argSingletonToRegister) noexcept;
 	void RegisterSingletonDestructor(std::function<void()> argDestructor) noexcept;
+	void DeleteSingleton(SingletonBase* argSingletonToDestroy) noexcept;
+
+	std::vector<std::unique_ptr<SingletonBase>> singletons;
+	std::vector<std::function<void()>> destructors;
 
 protected:
 
@@ -32,5 +38,4 @@ private:
 	SingletonManager& operator=(const SingletonManager&& argOther) = delete;
 
 	void DestroyAll() noexcept;
-	std::vector<std::function<void()>> destructors;
 };
