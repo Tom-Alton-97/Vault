@@ -11,28 +11,34 @@ class Singleton : public SingletonBase
 {
 public:
 
-	static [[nodiscard]] T& getInstance() noexcept
+	static inline [[nodiscard]] T& getInstance() noexcept
 	{
-		static T* instanceRef = nullptr;
+		static T* instancePtr = nullptr;
 		static std::unique_ptr<T> instance;
 		static std::once_flag initFlag;
 
 		std::call_once(initFlag, []()
 			{
 				instance.reset(new T());
-				instanceRef = instance.get();
+				instancePtr = instance.get();
 
 				SingletonManager::getInstance()->RegisterSingleton(std::move(instance));
 				SingletonManager::getInstance()->RegisterSingletonDestructor([&]()
 					{
-						instanceRef->destructor();
+						instancePtr->destructor();
+						instancePtr = nullptr;
 					});
 			});
 		
-		return *instanceRef;
+		return *instancePtr;
 	}
 
 protected:
+
+	friend class SingletonManager;
+
+	Singleton() = default;
+	~Singleton() = default;
 
 	virtual void destructor() noexcept = 0;
 private:

@@ -4,32 +4,77 @@
 #include "SingletonManager.h"
 #include "Singleton.h"
 
-class TestSingletonType : public Singleton<TestSingletonType>
+class TestSingletonType_1 : public Singleton<TestSingletonType_1>
 {
-	friend class Singleton<TestSingletonType>;
-	friend struct std::default_delete<TestSingletonType>;
+	friend struct std::default_delete<TestSingletonType_1>;
+	friend class Singleton<TestSingletonType_1>;
 
-	void destructor() noexcept override
-	{
-		
-	}
+	void destructor() noexcept override {}
 
-	~TestSingletonType() = default;
+	~TestSingletonType_1() = default;
 };
 
-TEST_CASE("Singleton-Manager-Test-001 : test")
+class TestSingletonType_2 : public Singleton<TestSingletonType_2>
 {
-	TestSingletonType::getInstance();
+	friend struct std::default_delete<TestSingletonType_2>;
+	friend class Singleton<TestSingletonType_2>;
 
-	REQUIRE(SingletonManager::getInstance()->singletons.size() == 1);
-	REQUIRE(SingletonManager::getInstance()->destructors.size() == 1);
+	void destructor() noexcept override {}
 
-	SingletonManager::getInstance()->DeleteSingleton(&TestSingletonType::getInstance());
+	~TestSingletonType_2() = default;
+};
 
-	REQUIRE(SingletonManager::getInstance()->singletons.size() == 0);
-	REQUIRE(SingletonManager::getInstance()->destructors.size() == 0);
+class TestSingletonType_3 : public Singleton<TestSingletonType_3>
+{
+	friend struct std::default_delete<TestSingletonType_3>;
+	friend class Singleton<TestSingletonType_3>;
+
+	void destructor() noexcept override {}
+
+	~TestSingletonType_3() = default;
+};
+
+TEST_CASE("Singleton-Manager-Test-001 : Tests that we can register a singleton and delete the singleton.")
+{
+	GIVEN("A singleton is created and registered.")
+	{
+		TestSingletonType_1::getInstance();
+
+		REQUIRE(SingletonManager::getInstance()->singletons.size() == 1);
+		REQUIRE(SingletonManager::getInstance()->destructors.size() == 1);
+
+		WHEN("We attempt to delete the singleton.")
+		{
+			SingletonManager::getInstance()->DestroySingleton(&TestSingletonType_1::getInstance());
+
+			THEN("The singleton shall be removed from the singleton manager")
+			{
+				REQUIRE(SingletonManager::getInstance()->singletons.size() == 0);
+				REQUIRE(SingletonManager::getInstance()->destructors.size() == 0);
+			}
+		}
+	}
 }
 
-// test destroy all
-// test register
-// test 
+TEST_CASE("Singleton-Manager-Test-002 : Tests that when we register multiple singletons we can call the DestroyAll to remove all singletons from the manager.")
+{
+	GIVEN("Two singleton types are registered to the singleton manager.")
+	{
+		TestSingletonType_2::getInstance();
+		TestSingletonType_3::getInstance();
+
+		REQUIRE(SingletonManager::getInstance()->singletons.size() == 2);
+		REQUIRE(SingletonManager::getInstance()->destructors.size() == 2);
+
+		WHEN("The singleton manager calls DestroyAll().")
+		{
+			SingletonManager::getInstance()->DestroyAll();
+
+			THEN("The singleton manager will have destroyed all registered singletons.")
+			{
+				REQUIRE(SingletonManager::getInstance()->singletons.size() == 0);
+				REQUIRE(SingletonManager::getInstance()->destructors.size() == 0);
+			}
+		}
+	}
+}

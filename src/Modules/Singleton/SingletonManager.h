@@ -19,7 +19,8 @@ public:
 
 	void RegisterSingleton(std::unique_ptr<SingletonBase> argSingletonToRegister) noexcept;
 	void RegisterSingletonDestructor(std::function<void()> argDestructor) noexcept;
-	void DeleteSingleton(SingletonBase* argSingletonToDestroy) noexcept;
+	void DestroySingleton(SingletonBase* argSingletonToDestroy) noexcept;
+	void DestroyAll() noexcept;
 
 	std::vector<std::unique_ptr<SingletonBase>> singletons;
 	std::vector<std::function<void()>> destructors;
@@ -36,6 +37,4 @@ private:
 	SingletonManager(SingletonManager&& argOther) = delete;
 	SingletonManager& operator=(const SingletonManager& argOther) = delete;
 	SingletonManager& operator=(const SingletonManager&& argOther) = delete;
-
-	void DestroyAll() noexcept;
 };

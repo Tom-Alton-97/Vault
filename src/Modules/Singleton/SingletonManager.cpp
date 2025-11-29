@@ -6,9 +6,10 @@ void SingletonManager::DestroyAll() noexcept
 {
 	for (const auto& localDestructor : std::views::reverse(destructors))
 	{
-		localDestructor();
+		std::invoke(localDestructor);
 	}
 
+	singletons.clear();
 	destructors.clear();
 }
 
@@ -22,7 +23,7 @@ void SingletonManager::RegisterSingletonDestructor(std::function<void()> argDest
 	destructors.push_back(std::move(argDestructor));
 }
 
-void SingletonManager::DeleteSingleton(SingletonBase* argSingletonToDestroy) noexcept
+void SingletonManager::DestroySingleton(SingletonBase* argSingletonToDestroy) noexcept
 {
 	auto singletonIterator = 
 		std::find_if(singletons.begin(), singletons.end(), 
