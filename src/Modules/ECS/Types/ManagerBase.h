@@ -41,7 +41,6 @@ namespace ECS_System
 		}
 
 		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier();
-		bool [[nodiscard]] const hasValidTypeIdentifierAvailable() noexcept;
 
 		IdentifierUnderlyingType nextIdentifier{ 0 };
 		std::vector<IdentifierUnderlyingType> identifiers{};

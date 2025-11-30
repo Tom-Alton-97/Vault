@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+#include <numeric>
 
 #include "ManagerBase.h"
 
@@ -38,17 +39,19 @@ namespace ECS_System
 			// TODO log
 			returnValue = false;
 		}
+		else
+		{
+			size_t reclaimedIdentifierIndex = reclaimedIdentifierIterator->second;
+			size_t lastReclaimedIdentifierIndex = identifiers.size() - 1;
 
-		size_t reclaimedIdentifierIndex = reclaimedIdentifierIterator->second;
-		size_t lastReclaimedIdentifierIndex = identifierToIndex.size() - 1;
-
-		std::swap(identifiers[reclaimedIdentifierIndex], identifiers[lastReclaimedIdentifierIndex]);
-		identifierToIndex[identifiers[reclaimedIdentifierIndex]] = reclaimedIdentifierIndex;
+			std::swap(identifiers[reclaimedIdentifierIndex], identifiers[lastReclaimedIdentifierIndex]);
+			identifierToIndex[identifiers[reclaimedIdentifierIndex]] = reclaimedIdentifierIndex;
 
 
-		identifiers.pop_back();
-		identifierToIndex.erase(argIdentifier);
-		reclaimedIdentifiers.push_back(argIdentifier);
+			identifiers.pop_back();
+			identifierToIndex.erase(argIdentifier);
+			reclaimedIdentifiers.push_back(argIdentifier);
+		}
 		
 		return returnValue;
 	}
@@ -63,32 +66,22 @@ namespace ECS_System
 		return returnValue;
 	}
 
-	IdentifierUnderlyingType const ManagerBase::internalGenerateIdentifier()
+	IdentifierUnderlyingType const ManagerBase::internalGenerateIdentifier() // TODO this will break if have max entities and no reclaimables
 	{
-		IdentifierUnderlyingType localNextIdentifier = ++nextIdentifier;
+		IdentifierUnderlyingType returnValue{};
 
-		if (false == hasValidTypeIdentifierAvailable())
+		if (nextIdentifier < std::numeric_limits<IdentifierUnderlyingType>::max())
 		{
-			if (!reclaimedIdentifiers.empty())
-			{
-				localNextIdentifier = getReclaimableIdentifier();
-			}
-
-			throw std::out_of_range("Attempted to generate an invalid identifier.");
+			returnValue = ++nextIdentifier;
+		} 
+		else if(!reclaimedIdentifiers.empty())
+		{
+			returnValue = getReclaimableIdentifier();
 		}
-
-		return localNextIdentifier;
-	}
-
-	bool [[nodiscard]] const ManagerBase::hasValidTypeIdentifierAvailable() noexcept
-	{
-		bool returnValue{ false };
-
-		static IdentifierUnderlyingType localMaxUsableValue = -1;
-
-		if (nextIdentifier != localMaxUsableValue)
+		else
 		{
-			returnValue = true;
+			// TODO log
+			throw std::out_of_range("Attempted to generate an invalid identifier.");
 		}
 
 		return returnValue;
