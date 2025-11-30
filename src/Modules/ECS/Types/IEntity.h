@@ -15,6 +15,11 @@ namespace ECS_System
 
 		const [[nodiscard]] EntityID getEntityID() const noexcept;
 
+		bool operator==(const IEntity& other) const noexcept
+		{
+			return entityIdentifier == other.getEntityID();
+		}
+
 	protected:
 		IEntity(const IEntity& argOther) = delete;
 		IEntity(IEntity&& argOther) = delete;

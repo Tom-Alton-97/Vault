@@ -1,8 +1,9 @@
 #include "IdentifierGenerator.h"
 
-#include <stdexcept>
+#include <algorithm>
 #include <iostream>
-#include <limits>
+#include <stdexcept>
+#include <vector>
 
 namespace ECS_System
 {
@@ -21,11 +22,15 @@ namespace ECS_System
 
 	IdentifierUnderlyingType IdentifierGenerator::generateIdentifier(const IdentifierType argIdentifierType) noexcept
 	{
-		IdentifierUnderlyingType localIdentifier{ internalGenerateIdentifier(argIdentifierType) };
+		IdentifierUnderlyingType returnValue{};
 
-		getInferredContainer(argIdentifierType).insert(localIdentifier);
+		auto& inferredContainer{ getInferredContainer(argIdentifierType) };
 
-		return localIdentifier;
+		returnValue = internalGenerateIdentifier(argIdentifierType);
+
+		inferredContainer.push_back(returnValue);
+
+		return returnValue;
 	}
 
 	const bool IdentifierGenerator::reclaimIdentifier(const IdentifierType argIdentifierType, const IdentifierUnderlyingType argIdentifier) noexcept
@@ -33,15 +38,17 @@ namespace ECS_System
 		bool returnVal{ false };
 
 		auto& inferredContainer{ getInferredContainer(argIdentifierType) };
-		auto localReclaimedIdentifierIterator{ inferredContainer.find(argIdentifier) };
+		auto localReclaimedIdentifierIterator = std::find(inferredContainer.begin(), inferredContainer.end(), argIdentifier);
 
 		if (inferredContainer.end() != localReclaimedIdentifierIterator)
 		{
-			getInferredReclaimedContainer(argIdentifierType).insert(*localReclaimedIdentifierIterator);
-			inferredContainer.erase(localReclaimedIdentifierIterator);
+			getInferredReclaimedContainer(argIdentifierType).push_back(*localReclaimedIdentifierIterator);
+
+			std::iter_swap(localReclaimedIdentifierIterator, inferredContainer.end() - 1);
+			inferredContainer.pop_back();
 
 			returnVal = true;
-		} 
+		}
 		else
 		{
 			// TODO log here
@@ -55,13 +62,27 @@ namespace ECS_System
 	{
 		IdentifierUnderlyingType localNextIdentifier = getNextInferredTypeIdentifier(argIdentifierType);
 
-		if (true == hasValidTypeIdentifierAvailable(argIdentifierType, localNextIdentifier))
+
+		if (false == hasValidTypeIdentifierAvailable(argIdentifierType, localNextIdentifier))
 		{
-			// TODO log message here
-			std::cerr << "No valid type identifer available." << std::endl << std::flush;
+			if (!getInferredReclaimedContainer(argIdentifierType).empty())
+			{
+				localNextIdentifier = getReclaimableIdentifier(argIdentifierType);
+			}
 		}
-		
+
 		return localNextIdentifier;
+	}
+
+	IdentifierUnderlyingType [[nodiscard]] IdentifierGenerator::getReclaimableIdentifier(IdentifierType const argIdentifierType) noexcept
+	{
+		IdentifierUnderlyingType returnValue{ 0 };
+		std::vector<IdentifierUnderlyingType>& localInferredReclaimedContainer = getInferredReclaimedContainer(argIdentifierType);
+
+		returnValue = localInferredReclaimedContainer.back();
+		localInferredReclaimedContainer.pop_back();
+
+		return returnValue;
 	}
 
 	bool [[nodiscard]] const IdentifierGenerator::hasValidTypeIdentifierAvailable(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argNextIdentifier) noexcept
@@ -76,7 +97,7 @@ namespace ECS_System
 		return !getInferredReclaimedContainer(argIdentifierType).empty();
 	}
 
-	std::set<IdentifierUnderlyingType>& IdentifierGenerator::getInferredContainer(const IdentifierType argIdentifierType)
+	std::vector<IdentifierUnderlyingType>& IdentifierGenerator::getInferredContainer(const IdentifierType argIdentifierType)
 	{
 		switch (argIdentifierType)
 		{
@@ -99,7 +120,7 @@ namespace ECS_System
 
 		throw std::invalid_argument("Identifier type was invalid.");
 	}
-	std::set<IdentifierUnderlyingType> [[nodiscard]] & IdentifierGenerator::getInferredReclaimedContainer(IdentifierType const argIdentifierType)
+	std::vector<IdentifierUnderlyingType> [[nodiscard]] & IdentifierGenerator::getInferredReclaimedContainer(IdentifierType const argIdentifierType)
 	{
 		switch (argIdentifierType)
 		{
@@ -122,7 +143,7 @@ namespace ECS_System
 
 		throw std::invalid_argument("Identifier type was invalid.");
 	}
-	IdentifierUnderlyingType&  IdentifierGenerator::getNextInferredTypeIdentifier(IdentifierType const argIdentifierType)
+	IdentifierUnderlyingType& IdentifierGenerator::getNextInferredTypeIdentifier(IdentifierType const argIdentifierType)
 	{
 		switch (argIdentifierType)
 		{

@@ -42,3 +42,30 @@ TEST_CASE("Identifier-Generator-Test-002 : Identifier is able to generate an Ide
 		}
 	}
 }
+
+TEST_CASE("Identifier-Generator-Test-003 : Identifier is able to be generated, reclaimed and then reused on next generation.")
+{
+	ECS_System::IdentifierUnderlyingType localIdentifierToTrack{};
+
+	GIVEN("Identifiers have been generated.")
+	{
+		ECS_System::IdentifierGenerator::getInstance()->Reset();
+
+		ECS_System::IdentifierType localIdentifierType{ ECS_System::IdentifierType::EntityType };
+
+		ECS_System::IdentifierUnderlyingType localIdentifier_1{ ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) };
+		ECS_System::IdentifierUnderlyingType localIdentifier_2{ ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) };
+		ECS_System::IdentifierUnderlyingType localIdentifier_3{ ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) };
+		localIdentifierToTrack = localIdentifier_2;
+
+		THEN("Reclaim the second identifier.")
+		{
+			REQUIRE(ECS_System::IdentifierGenerator::getInstance()->reclaimIdentifier(localIdentifierType, localIdentifier_2));
+
+			WHEN("A new Identifier is reclaimed it will be equal to the reclaimed Identifier")
+			{
+				REQUIRE(ECS_System::IdentifierGenerator::getInstance()->generateIdentifier(localIdentifierType) == localIdentifierToTrack);
+			}
+		}
+	}
+}

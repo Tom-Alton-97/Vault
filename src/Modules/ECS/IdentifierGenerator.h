@@ -1,7 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <set>
+#include <vector>
+#include <unordered_map>
 
 namespace ECS_System
 {
@@ -35,23 +36,28 @@ namespace ECS_System
 
 		friend struct std::default_delete<IdentifierGenerator>;
 
-		std::set<IdentifierUnderlyingType> [[nodiscard]] & getInferredContainer(IdentifierType const argIdentifierType);
-		std::set<IdentifierUnderlyingType> [[nodiscard]] & getInferredReclaimedContainer(IdentifierType const argIdentifierType);
+		std::vector<IdentifierUnderlyingType> [[nodiscard]] & getInferredContainer(IdentifierType const argIdentifierType);
+		std::vector<IdentifierUnderlyingType> [[nodiscard]] & getInferredReclaimedContainer(IdentifierType const argIdentifierType);
 		IdentifierUnderlyingType [[nodiscard]] & getNextInferredTypeIdentifier(IdentifierType const argIdentifierType);
 
 		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier(IdentifierType const argIdentifierType) noexcept;
+		IdentifierUnderlyingType [[nodiscard]] getReclaimableIdentifier(IdentifierType const argIdentifierType) noexcept;
 		bool [[nodiscard]] const hasValidTypeIdentifierAvailable(IdentifierType const argIdentifierType, IdentifierUnderlyingType const argNextIdentifier) noexcept;
 
 		IdentifierUnderlyingType nextEntityTypeIdentifier{ 0 };
 		IdentifierUnderlyingType nextComponentTypeIdentifier{ 0 };
 		IdentifierUnderlyingType nextSystemTypeIdentifier{ 0 };
 
-		std::set<IdentifierUnderlyingType> entityTypeIdentifiers{};
-		std::set<IdentifierUnderlyingType> componentTypeIdentifiers{};
-		std::set<IdentifierUnderlyingType> systemTypeIdentifiers{};
+		std::vector<IdentifierUnderlyingType> entityTypeIdentifiers{};
+		std::vector<IdentifierUnderlyingType> componentTypeIdentifiers{};
+		std::vector<IdentifierUnderlyingType> systemTypeIdentifiers{};
 
-		std::set<IdentifierUnderlyingType> reclaimedEntityTypeIdentifiers{};
-		std::set<IdentifierUnderlyingType> reclaimedComponentTypeIdentifiers{};
-		std::set<IdentifierUnderlyingType> reclaimedSystemTypeIdentifiers{};
+		std::unordered_map<IdentifierUnderlyingType, size_t> entityIdentifierToIndex;
+		std::unordered_map<IdentifierUnderlyingType, size_t> componentIdentifierToIndex;
+		std::unordered_map<IdentifierUnderlyingType, size_t> systemIdentifierToIndex;
+
+		std::vector<IdentifierUnderlyingType> reclaimedEntityTypeIdentifiers{};
+		std::vector<IdentifierUnderlyingType> reclaimedComponentTypeIdentifiers{};
+		std::vector<IdentifierUnderlyingType> reclaimedSystemTypeIdentifiers{};
 	};
 }

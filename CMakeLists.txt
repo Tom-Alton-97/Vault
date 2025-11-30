@@ -15,6 +15,6 @@ foreach(MODULE ${MODULE_DIRS})
     endif()
 endforeach()
 
-add_executable(Main src/main.cpp "src/Modules/Singleton/Singleton.h")
+add_executable(Main src/main.cpp)
 target_link_libraries(Main PRIVATE ECS)
 target_include_directories(Main PRIVATE src/Modules/ECS)

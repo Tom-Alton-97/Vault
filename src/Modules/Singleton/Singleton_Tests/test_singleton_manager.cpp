@@ -4,8 +4,6 @@
 #include "SingletonManager.h"
 #include "Singleton.h"
 
-
-
 namespace
 {
 	class TestSingletonType_1 : public Singleton<TestSingletonType_1>
