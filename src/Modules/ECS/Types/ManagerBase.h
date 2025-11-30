@@ -43,8 +43,8 @@ namespace ECS_System
 		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier();
 
 		IdentifierUnderlyingType nextIdentifier{ 0 };
-		std::vector<IdentifierUnderlyingType> identifiers{};
-		std::unordered_map<IdentifierUnderlyingType, size_t> identifierToIndex;
+		std::vector<IdentifierUnderlyingType> dense{};
+		std::vector<IdentifierUnderlyingType> sparse{};
 		std::vector<IdentifierUnderlyingType> reclaimedIdentifiers{};
 	};
 }
