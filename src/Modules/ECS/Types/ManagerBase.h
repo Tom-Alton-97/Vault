@@ -17,7 +17,7 @@ namespace ECS_System
 		SystemType = 1 << 2
 	};
 
-	class ManagerBase : public Singleton<ManagerBase>
+	class ManagerBase
 	{
 	public:
 
@@ -30,17 +30,11 @@ namespace ECS_System
 		void Reset() noexcept;
  
 	protected:
-	private:
-
 		ManagerBase();
+	private:
 
 		friend struct std::default_delete<ManagerBase>;
 		friend class Singleton<ManagerBase>;
-
-		void destructor() noexcept override
-		{
-			Reset();
-		}
 
 		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier();
 

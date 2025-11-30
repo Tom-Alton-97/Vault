@@ -1,5 +1,0 @@
-
-namespace ECS_System
-{
-
-}

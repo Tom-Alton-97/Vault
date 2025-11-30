@@ -1,5 +1,10 @@
 #include <benchmark/benchmark.h>
-#include "Types/ManagerBase.h"
+
+#include "Types/EntityManager.h"
+#include "Types/ComponentManager.h"
+#include "Types/SystemManager.h"
+#include "Types/VelocityComponent.h"
+#include "Types/VelocitySystem.h"
 
 namespace
 {
@@ -10,13 +15,15 @@ namespace ECS_System
 {
 	static void BM_EntityManager_GenerateIdentifiers(benchmark::State& state)
 	{
-		ManagerBase::getInstance().Reset();
+        EntityManager::getInstance().Reset();
+        ComponentManager::getInstance().Reset();
+        SystemManager::getInstance().Reset();
 
 		for (auto _ : state)
 		{
 			for (std::size_t i{ 0 }; i < IDENTIFIERS_TO_GENERATE; ++i)
 			{
-				benchmark::DoNotOptimize(ManagerBase::getInstance().generateIdentifier());
+				benchmark::DoNotOptimize(EntityManager::getInstance().generateIdentifier());
 			}
 		}
 
@@ -25,26 +32,26 @@ namespace ECS_System
 
 	BENCHMARK(BM_EntityManager_GenerateIdentifiers)->Unit(benchmark::kMillisecond);
 
-    static void BM_EntityManager_MaxIdentifier(benchmark::State& state) {
-        ManagerBase::getInstance().Reset();
+    static void BM_EntityManager_MaxIdentifier(benchmark::State& state) 
+    {
+        EntityManager::getInstance().Reset();
+        ComponentManager::getInstance().Reset();
+        SystemManager::getInstance().Reset();
 
-        // Temporarily set a small "max" for testing
-        constexpr std::uint64_t testMax = IDENTIFIERS_TO_GENERATE; // instead of full uint64 max
 
-        // Pre-fill identifiers up to testMax
+        constexpr std::uint64_t testMax = IDENTIFIERS_TO_GENERATE;
+
         for (std::uint64_t i = 0; i < testMax; ++i) {
-            benchmark::DoNotOptimize(ManagerBase::getInstance().generateIdentifier());
+            benchmark::DoNotOptimize(EntityManager::getInstance().generateIdentifier());
         }
 
-        // Reclaim half of them
         for (std::uint64_t i = 0; i < testMax / 2; ++i) {
-            benchmark::DoNotOptimize(ManagerBase::getInstance().reclaimIdentifier(i + 1));
+            benchmark::DoNotOptimize(EntityManager::getInstance().reclaimIdentifier(i + 1));
         }
 
         for (auto _ : state) {
-            // Generate reclaimed IDs (should come from reclaimed pool)
             for (std::uint64_t i = 0; i < testMax / 2; ++i) {
-                benchmark::DoNotOptimize(ManagerBase::getInstance().generateIdentifier());
+                benchmark::DoNotOptimize(EntityManager::getInstance().generateIdentifier());
             }
         }
 
@@ -52,7 +59,39 @@ namespace ECS_System
     }
 
     BENCHMARK(BM_EntityManager_MaxIdentifier)->Unit(benchmark::kMillisecond);
+
+    static void BM_Velocity_Update(benchmark::State& state)
+    {
+        EntityManager::getInstance().Reset();
+        ComponentManager::getInstance().Reset();
+        SystemManager::getInstance().Reset();
+
+        SystemManager::getInstance().registerSystem<VelocitySystem>();
+        ComponentManager::getInstance().registerComponent<VelocityComponent>();
+
+        for (std::size_t i{ 0 }; i < IDENTIFIERS_TO_GENERATE; ++i)
+        {
+            auto identifier = EntityManager::getInstance().createEntity();
+            ComponentManager::getInstance().addComponent<VelocityComponent>(
+                identifier, VelocityComponent(0.0f, 0.0f, 0.0f)
+            );
+
+            benchmark::DoNotOptimize(
+                ComponentManager::getInstance().getComponent<VelocityComponent>(identifier)
+            );
+        }
+
+        for (auto _ : state)
+        {
+            SystemManager::getInstance().updateSystems(0.016f);
+
+            benchmark::ClobberMemory();
+        }
+
+        state.SetItemsProcessed(int64_t(state.iterations()) * IDENTIFIERS_TO_GENERATE);
+    }
+
+    BENCHMARK(BM_Velocity_Update)->Unit(benchmark::kMillisecond);
 }
 
 BENCHMARK_MAIN();
-

@@ -4,7 +4,7 @@
 #include <vector>
 #include <numeric>
 
-#include "ManagerBase.h"
+#include "EntityManager.h"
 
 namespace
 {
@@ -30,13 +30,6 @@ namespace ECS_System
 
 	IdentifierUnderlyingType ManagerBase::generateIdentifier()
 	{
-		//IdentifierUnderlyingType returnValue{};
-
-		//returnValue = internalGenerateIdentifier();
-
-		//identifiers.push_back(returnValue);
-		//identifierToIndex.insert({ returnValue, identifiers.size() - 1});
-
 		return internalGenerateIdentifier();
 	}
 

@@ -2,12 +2,12 @@
 
 namespace ECS_System
 {
-
-	template <typename T>
-	class Component
+	class ComponentBase
 	{
 	public:
+		virtual ~ComponentBase() = default;
 	protected:
 	private:
 	};
+
 }
