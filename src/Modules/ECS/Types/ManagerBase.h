@@ -17,8 +17,21 @@ namespace ECS_System
 		SystemType = 1 << 2
 	};
 
-	class ManagerBase : private Singleton<ManagerBase>
+	class ManagerBase : public Singleton<ManagerBase>
 	{
+	public:
+
+		~ManagerBase() = default;
+
+		IdentifierUnderlyingType [[nodiscard]] generateIdentifier();
+		const bool reclaimIdentifier(IdentifierUnderlyingType const argIdentifier) noexcept;
+		IdentifierUnderlyingType [[nodiscard]] getReclaimableIdentifier() noexcept;
+
+		void Reset() noexcept;
+ 
+	protected:
+	private:
+
 		friend struct std::default_delete<ManagerBase>;
 		friend class Singleton<ManagerBase>;
 
@@ -27,20 +40,7 @@ namespace ECS_System
 			Reset();
 		}
 
-		~ManagerBase() = default;
-
-		IdentifierUnderlyingType [[nodiscard]] generateIdentifier();
-		const bool reclaimIdentifier(IdentifierUnderlyingType const argIdentifier) noexcept;
-
-		void Reset() noexcept;
-
-	protected:
-	private:
-
-		friend struct std::default_delete<ManagerBase>;
-
 		IdentifierUnderlyingType const [[nodiscard]] internalGenerateIdentifier();
-		IdentifierUnderlyingType [[nodiscard]] getReclaimableIdentifier() noexcept;
 		bool [[nodiscard]] const hasValidTypeIdentifierAvailable() noexcept;
 
 		IdentifierUnderlyingType nextIdentifier{ 0 };

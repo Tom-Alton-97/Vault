@@ -22,26 +22,27 @@ namespace ECS_System
 		returnValue = internalGenerateIdentifier();
 
 		identifiers.push_back(returnValue);
-		identifierToIndex.insert(returnValue, identifiers.size() - 1);
+		identifierToIndex.insert({ returnValue, identifiers.size() - 1});
 
 		return returnValue;
 	}
 
 	const bool ManagerBase::reclaimIdentifier(const IdentifierUnderlyingType argIdentifier) noexcept
 	{
-		bool returnVal{ false };
+		bool returnValue{ true };
 
 		auto reclaimedIdentifierIterator{ identifierToIndex.find(argIdentifier) };
 
 		if (reclaimedIdentifierIterator == identifierToIndex.end())
 		{
 			// TODO log
+			returnValue = false;
 		}
 
 		size_t reclaimedIdentifierIndex = reclaimedIdentifierIterator->second;
 		size_t lastReclaimedIdentifierIndex = identifierToIndex.size() - 1;
 
-		std::swap(identifiers[reclaimedIdentifierIndex], identifiers[lastReclaimedIdentifierIndex]); //check what is faster [] or .at
+		std::swap(identifiers[reclaimedIdentifierIndex], identifiers[lastReclaimedIdentifierIndex]);
 		identifierToIndex[identifiers[reclaimedIdentifierIndex]] = reclaimedIdentifierIndex;
 
 
@@ -49,7 +50,17 @@ namespace ECS_System
 		identifierToIndex.erase(argIdentifier);
 		reclaimedIdentifiers.push_back(argIdentifier);
 		
-		return returnVal;
+		return returnValue;
+	}
+
+	IdentifierUnderlyingType [[nodiscard]] ManagerBase::getReclaimableIdentifier() noexcept
+	{
+		IdentifierUnderlyingType returnValue{ 0 };
+
+		returnValue = reclaimedIdentifiers.back();
+		reclaimedIdentifiers.pop_back();
+
+		return returnValue;
 	}
 
 	IdentifierUnderlyingType const ManagerBase::internalGenerateIdentifier()
@@ -67,16 +78,6 @@ namespace ECS_System
 		}
 
 		return localNextIdentifier;
-	}
-
-	IdentifierUnderlyingType [[nodiscard]] ManagerBase::getReclaimableIdentifier() noexcept
-	{
-		IdentifierUnderlyingType returnValue{ 0 };
-
-		returnValue = reclaimedIdentifiers.back();
-		reclaimedIdentifiers.pop_back();
-
-		return returnValue;
 	}
 
 	bool [[nodiscard]] const ManagerBase::hasValidTypeIdentifierAvailable() noexcept
