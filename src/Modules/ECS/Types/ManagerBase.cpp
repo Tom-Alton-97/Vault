@@ -6,8 +6,20 @@
 
 #include "ManagerBase.h"
 
+namespace
+{
+	static constexpr std::size_t PREALLOCATE_EXPECTED_MAX_IDENTIFIERS{ 10'000'000 };
+}
+
 namespace ECS_System
 {
+	ManagerBase::ManagerBase()
+	{
+		dense.reserve(PREALLOCATE_EXPECTED_MAX_IDENTIFIERS);
+		sparse.reserve(PREALLOCATE_EXPECTED_MAX_IDENTIFIERS);
+		reclaimedIdentifiers.reserve(PREALLOCATE_EXPECTED_MAX_IDENTIFIERS / 2);
+	}
+
 	void ManagerBase::Reset() noexcept
 	{
 		nextIdentifier = 0;
@@ -45,31 +57,6 @@ namespace ECS_System
 		reclaimedIdentifiers.push_back(argIdentifier);
 
 		return true;
-
-		///////////////////
-
-		//auto reclaimedIdentifierIterator{ identifierToIndex.find(argIdentifier) };
-
-		//if (reclaimedIdentifierIterator == identifierToIndex.end())
-		//{
-		//	// TODO log
-		//	returnValue = false;
-		//}
-		//else
-		//{
-		//	size_t reclaimedIdentifierIndex = reclaimedIdentifierIterator->second;
-		//	size_t lastReclaimedIdentifierIndex = identifiers.size() - 1;
-
-		//	std::swap(identifiers[reclaimedIdentifierIndex], identifiers[lastReclaimedIdentifierIndex]);
-		//	identifierToIndex[identifiers[reclaimedIdentifierIndex]] = reclaimedIdentifierIndex;
-
-
-		//	identifiers.pop_back();
-		//	identifierToIndex.erase(argIdentifier);
-		//	reclaimedIdentifiers.push_back(argIdentifier);
-		//}
-		//
-		//return returnValue;
 	}
 
 	IdentifierUnderlyingType [[nodiscard]] ManagerBase::getReclaimableIdentifier() noexcept

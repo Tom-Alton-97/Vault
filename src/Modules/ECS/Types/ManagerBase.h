@@ -32,6 +32,8 @@ namespace ECS_System
 	protected:
 	private:
 
+		ManagerBase();
+
 		friend struct std::default_delete<ManagerBase>;
 		friend class Singleton<ManagerBase>;
 
