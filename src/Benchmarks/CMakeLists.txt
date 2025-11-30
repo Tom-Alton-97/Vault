@@ -7,5 +7,5 @@ target_compile_features(ECS_Benchmarks PRIVATE cxx_std_23)
 
 set_target_properties(ECS_Benchmarks PROPERTIES
     CMAKE_BUILD_TYPE Release
-    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/Release
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin/x64-release
 )

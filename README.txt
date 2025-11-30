@@ -2,10 +2,11 @@ cmake -S . -B out/build/x64-debug
 cmake -S . -B out/build/x64-debug -DBUILD_TESTS=ON
 
 cmake -S . -B out/build/x64-release -DBUILD_BENCHMARK_TESTS=ON -DBENCHMARK_ENABLE_TESTING=OFF
-cmake --build out/build/x64-release --target ECS ECS_Benchmarks
+cmake --build out/build/x64-release --config Release
 
+cmake -S . -B out/build/x64-debug -DBUILD_TESTS=ON -DBENCHMARK_ENABLE_TESTING=OFF
 cmake --build out/build/x64-debug
-cmake -S . -B out/build/x64-debug -DBUILD_TESTS=ON -DBUILD_BENCHMARK_TESTS=ON -DBENCHMARK_ENABLE_TESTING=OFF
+
 
 //////////
 
