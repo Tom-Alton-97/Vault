@@ -1,16 +1,19 @@
 #include "Entity.h"
 
-const EntityActiveStatus Entity::getEntityStatus() const noexcept
+namespace ECS_System
 {
-	return this->entityStatus.load();
-}
+	const EntityActiveStatus Entity::getEntityStatus() const noexcept
+	{
+		return this->entityStatus.load();
+	}
 
-void Entity::setEntityStatusEnabled() noexcept
-{
-	this->entityStatus.store(EntityActiveStatus::EntityEnabled);
-}
+	void Entity::setEntityStatusEnabled() noexcept
+	{
+		this->entityStatus.store(EntityActiveStatus::EntityEnabled);
+	}
 
-void Entity::setEntityStatusDisabled() noexcept
-{
-	this->entityStatus.store(EntityActiveStatus::EntityDisabled);
+	void Entity::setEntityStatusDisabled() noexcept
+	{
+		this->entityStatus.store(EntityActiveStatus::EntityDisabled);
+	}
 }
